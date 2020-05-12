@@ -124,7 +124,6 @@ Christoph Semken%
 %    \begin{macrocode}
 \seq_new:N \g_ban_titles
 \seq_new:N \g_ban_content
-\seq_new:N \g_ban_backlabels
 %    \end{macrocode}
 %
 % \subsection{Macros}
@@ -132,13 +131,10 @@ Christoph Semken%
 % \begin{macro}{\appxnote}
 % Create a new appendix note and insert a link
 %    \begin{macrocode}
-\NewDocumentCommand{\appxnote}{m m m}{
-  % #1 = note name, #2 = backlabel, #3 = content
+\NewDocumentCommand{\appxnote}{m m}{
   \seq_gput_right:Nn \g_ban_titles {#1}
-  \seq_gput_right:Nn \g_ban_backlabels {#2}
-  \seq_gput_right:Nn \g_ban_content {#3}
-  % print button
-  \hyperlink{an-\seq_count:N \g_ban_titles}{\beamergotobutton{#1}}
+  \seq_gput_right:Nn \g_ban_content {#2}
+  \hyperlink{ban-\seq_count:N \g_ban_titles}{\beamergotobutton{#1}}\label{ban-back-\seq_count:N \g_ban_titles}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -147,8 +143,8 @@ Christoph Semken%
 % Print an appendix note
 %    \begin{macrocode}
 \cs_set:Npn \print_func:n #1 { 
-  \begin{frame}[label=an-#1]{\seq_item:Nn \g_ban_titles {#1}}
-    \hyperlink{ \seq_item:Nn \g_ban_backlabels {#1} }{\beamerreturnbutton{Back}}
+  \begin{frame}[label=ban-#1]{\seq_item:Nn \g_ban_titles {#1}}
+    \hyperlink{ ban-back-#1 }{\beamerreturnbutton{Back}}
     \vfill
     \seq_item:Nn \g_ban_content {#1}
   \end{frame}

@@ -1,3 +1,4 @@
 /build
 /.tex-build
-beamerappendixnote.pdf
+*.pdf
+*.sty
