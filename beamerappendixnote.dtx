@@ -21,54 +21,67 @@
 %<*driver>
 \ProvidesFile{beamerappendixnote.dtx}
 %</driver>
-%<package>
-\ProvidesPackage{beamerappendixnote}
+%<package> \ProvidesPackage{beamerappendixnote}
 %<*package>
-  [2020/05/07 v1.0 initial version]
+  [2020/05/13 v1.0 initial version]
 %</package>
 %<*driver>
 \documentclass{l3doc}
 \usepackage{beamerappendixnote}
 
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  keepspaces=true,
+}
+\usepackage{graphicx}
+
 \begin{document}
 
-\changes{v1.0}{2020/05/07}{Initial version}
+\changes{v1.0}{2020/05/13}{Initial version}
 
 \GetFileInfo{beamerappendixnote.dtx}
 
-\title{%
-  The \pkg{beamerappendixnote} package%
-  \thanks{This file describes \fileversion, last revised \filedate.}%
-}
+\title{The \pkg{beamerappendixnote} package}
 
-\author{%
-Christoph Semken%
- \thanks{%
-   E-mail:
+\author{Christoph Semken%
+ \thanks{E-mail:
    \href{mailto:christoph.ban@semken.info}
      {christoph.ban@semken.info}%
   }%
 }
 
-\date{Released \filedate}
+\date{\fileversion\ --- \filedate}
 
 \maketitle
 
 \begin{documentation}
 
-	\section{Usage}
-	
-	\begin{function}{\appxnote}
-	 \begin{syntax}
-	   \cs{appxnote}\marg{title}\marg{backlabel}\marg{content}
-	 \end{syntax}
-	\end{function}
-	
-	\begin{function}{\printappxnotes}
-	 \begin{syntax}
-	   \cs{printappxnotes}
-	 \end{syntax}
-	\end{function}
+\noindent Beamer appendix note introduces the \cs{beamerappxnote} command, which puts the note's content on a separate beamer frame, shown by the command \cs{printappxnotes}.  It also creates interactive buttons to move back and forth between the two frames:
+
+\lstinputlisting{example-basic.tex}
+\includegraphics[page=1,width=.49\linewidth]{example-basic.pdf}
+\includegraphics[page=2,width=.49\linewidth]{example-basic.pdf}
+
+\clearpage
+\section{Usage}
+
+\begin{function}{\appxnote}
+ \begin{syntax}
+   \cs{appxnote}\marg{title}\marg{content}
+ \end{syntax}
+ 
+ Create a new appendix note.  Inserts a \cs{beamergotobutton} to a frame that contains \marg{content}.  The appendix frame is created using \cs{printappxnotes}.  The button’s text and the title of the appendix frame are both set to \marg{title}.
+\end{function}
+
+\begin{function}{\printappxnotes}
+ \begin{syntax}
+   \cs{printappxnotes}
+ \end{syntax}
+ 
+ Prints appendix notes in the order they are created using \cs{appxnote}.  Has to be used after the last appendix note.  Uses one frame per note.  Inserts a \cs{beamerreturnbutton} button to the frame where \cs{appxnote} was called, followed by the content, separated by a \cs{vfill}.  
+\end{function}
 
 \end{documentation}
 
@@ -134,7 +147,8 @@ Christoph Semken%
 \NewDocumentCommand{\appxnote}{m m}{
   \seq_gput_right:Nn \g_ban_titles {#1}
   \seq_gput_right:Nn \g_ban_content {#2}
-  \hyperlink{ban-\seq_count:N \g_ban_titles}{\beamergotobutton{#1}}\label{ban-back-\seq_count:N \g_ban_titles}
+  \hyperlink{ban-\seq_count:N \g_ban_titles}{\beamergotobutton{#1}}%
+  \label{ban-back-\seq_count:N \g_ban_titles}
 }
 %    \end{macrocode}
 % \end{macro}

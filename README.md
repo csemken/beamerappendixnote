@@ -1,8 +1,8 @@
-Beamer appendix note introduces the `\beamerappxnote` command, which puts the note's content on a seperate beamer frame, shown by the command `\printappxnotes`.  It also creates an interactive button to go to the appendix frame and a back button on the latter.
+Beamer appendix note introduces the `\beamerappxnote` command, which puts the note's content on a separate beamer frame, shown by the command `\printappxnotes`.  It also creates interactive buttons to move back and forth between the two frames.
 
 # Licence
 
-The `beamerappendixnote` package is made available under the LaTeX Project Public License (LPPL). See the information in LICENSE for information on licensing.
+The `beamerappendixnote` package is made available under the [LaTeX Project Public License (LPPL)](http://www.latex-project.org/lppl.txt), either version 1.3c of this license or (at your option) any later version.
 
 # Installation
 
@@ -10,19 +10,19 @@ To install the package, copy beamersubframe.sty into your `texmf` folder.  If yo
 
 # Build
 
-1. Generating beamersubframe.sty
-
+1. Generate beamersubframe.sty
 ```
-tex -output-directory=build beamersubframe.ins
+tex beamersubframe.ins
 ```
 
-
-2. Making the Documentation
-
+2. Compile examples
 ```
-xelatex -output-directory=build beamersubframe.dtx 
-makeindex -s build/gind.ist build/beamersubframe.idx
-pdflatex beamersubframe.dtx
-pdflatex beamersubframe.dtx
+xelatex example*
+```
+
+3. Compile documentation
+```
+xelatex beamersubframe.dtx 
+xelatex beamersubframe.dtx 
 ```
 
