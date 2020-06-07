@@ -1,4 +1,4 @@
-Beamer appendix note introduces the `\beamerappxnote` command, which puts the note's content on a separate beamer frame, shown by the command `\printappxnotes`.  It also creates interactive buttons to move back and forth between the two frames.
+Beamer appendix note introduces the `\appxnote` command, which puts the note's content on a separate beamer frame, shown by the command `\printappxnotes`.  It also creates interactive buttons to move back and forth between the two frames.
 
 # Licence
 

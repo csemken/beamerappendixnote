@@ -23,23 +23,35 @@
 %</driver>
 %<package> \ProvidesPackage{beamerappendixnote}
 %<*package>
-  [2020/05/13 v1.0 initial version]
+  [2020/06/07 v1.0.1 updated documentation]
 %</package>
 %<*driver>
 \documentclass{l3doc}
-\usepackage{beamerappendixnote}
 
-\usepackage{listings}
+%% Packages
+% This package
+\usepackage{beamerappendixnote}
+% Unicode
+\usepackage{fontspec,unicode-math}
+% Auxiliary
+\usepackage{listings,graphicx}
+
+%% Layout
+% Font
+\setmainfont{TeX Gyre Pagella}
+% Listings
 \lstset{
   basicstyle=\ttfamily,
   columns=fullflexible,
   keepspaces=true,
 }
-\usepackage{graphicx}
+% Links
+\hypersetup{colorlinks,citecolor=blue,linkcolor=blue,urlcolor=blue}
+
+%% Definitions
+\newcommand\fnurl[2]{\href{#1}{#2}\footnote{\url{#1}}}
 
 \begin{document}
-
-\changes{v1.0}{2020/05/13}{Initial version}
 
 \GetFileInfo{beamerappendixnote.dtx}
 
@@ -58,29 +70,33 @@
 
 \begin{documentation}
 
-\noindent Beamer appendix note introduces the \cs{beamerappxnote} command, which puts the note's content on a separate beamer frame, shown by the command \cs{printappxnotes}.  It also creates interactive buttons to move back and forth between the two frames:
+\noindent Beamer appendix note introduces the \cs{appxnote} command, which puts the note's content on a separate beamer frame, shown by the command \cs{printappxnotes}.  It also creates interactive buttons to move back and forth between the two frames:
 
 \lstinputlisting{example-basic.tex}
 \includegraphics[page=1,width=.49\linewidth]{example-basic.pdf}
 \includegraphics[page=2,width=.49\linewidth]{example-basic.pdf}
 
 \clearpage
+\section{Installation}
+
+The \pkg{beamerappendixnote} package is available on \fnurl{https://ctan.org/pkg/beamerappendixnote}{CTAN}.  The easiest way to install it is through a package manager.  For help, see the \fnurl{https://miktex.org/howto/miktex-console}{MiKTeX} or \fnurl{https://www.tug.org/texlive/doc/texlive-en/texlive-en.html\#x1-430005}{TeX Live} manual.  To build \pkg{beamerappendixnote} from the source code, follow the instructions in the \verb|README.md| file.
+
 \section{Usage}
 
 \begin{function}{\appxnote}
- \begin{syntax}
+  \begin{syntax}
    \cs{appxnote}\marg{title}\marg{content}
- \end{syntax}
- 
- Create a new appendix note.  Inserts a \cs{beamergotobutton} to a frame that contains \marg{content}.  The appendix frame is created using \cs{printappxnotes}.  The button’s text and the title of the appendix frame are both set to \marg{title}.
+  \end{syntax}
+  
+  Create a new appendix note.  Inserts a \cs{beamergotobutton} to a frame that contains \marg{content}.  The appendix frame is created using \cs{printappxnotes}.  The button’s text and the title of the appendix frame are both set to \marg{title}.
 \end{function}
 
 \begin{function}{\printappxnotes}
- \begin{syntax}
+  \begin{syntax}
    \cs{printappxnotes}
- \end{syntax}
- 
- Prints appendix notes in the order they are created using \cs{appxnote}.  Has to be used after the last appendix note.  Uses one frame per note.  Inserts a \cs{beamerreturnbutton} button to the frame where \cs{appxnote} was called, followed by the content, separated by a \cs{vfill}.  
+  \end{syntax}
+  
+  Prints appendix notes in the order they are created using \cs{appxnote}.  Has to be used after the last appendix note.  Uses one frame per note.  Inserts a \cs{beamerreturnbutton} button to the frame where \cs{appxnote} was called, followed by the content, separated by a \cs{vfill}.  
 \end{function}
 
 \end{documentation}
