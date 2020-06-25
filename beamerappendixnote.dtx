@@ -153,16 +153,18 @@ The \pkg{beamerappendixnote} package is available on \fnurl{https://ctan.org/pkg
 %    \begin{macrocode}
 \seq_new:N \g_ban_titles
 \seq_new:N \g_ban_content
+\seq_new:N \g_ban_options
 %    \end{macrocode}
 %
 % \subsection{Macros}
 %
 % \begin{macro}{\appxnote}
-% Create a new appendix note and insert a link
+% Create a new appendix note (store values) and insert a button
 %    \begin{macrocode}
-\NewDocumentCommand{\appxnote}{m m}{
+\NewDocumentCommand{\appxnote}{m O{t} m}{
   \seq_gput_right:Nn \g_ban_titles {#1}
-  \seq_gput_right:Nn \g_ban_content {#2}
+  \seq_gput_right:Nn \g_ban_options {#2}
+  \seq_gput_right:Nn \g_ban_content {#3}
   \hyperlink{ban-\seq_count:N \g_ban_titles}{\beamergotobutton{#1}}%
   \label{ban-back-\seq_count:N \g_ban_titles}
 }
@@ -171,13 +173,25 @@ The \pkg{beamerappendixnote} package is available on \fnurl{https://ctan.org/pkg
 % 
 % \begin{macro}{\@@_print_func:n}
 % Print an appendix note
+% Args: title, content, label, back label, options
 %    \begin{macrocode}
-\cs_set:Npn \print_func:n #1 { 
-  \begin{frame}[label=ban-#1]{\seq_item:Nn \g_ban_titles {#1}}
-    \hyperlink{ ban-back-#1 }{\beamerreturnbutton{Back}}
+\cs_set:Npn \print_func:nnnnn #1 #2 #3 #4 #5 { 
+  \def\options{#5}
+  \begin{frame}[\expandafter\options]{#1}\label{#3}
+    \hyperlink{#4}{\beamerreturnbutton{Back}}
     \vfill
-    \seq_item:Nn \g_ban_content {#1}
+    #2
   \end{frame}
+}
+% Get title, content, label, back label and options
+% Arg: id
+%    \begin{macrocode}
+\cs_set:Npn \expand_func:n #1 { 
+  \print_func:nnnnn {\seq_item:Nn \g_ban_titles {#1}}
+                    {\seq_item:Nn \g_ban_content {#1}}
+                    {ban-#1}
+                    {ban-back-#1}
+                    {\seq_item:Nn \g_ban_options {#1}}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -186,7 +200,7 @@ The \pkg{beamerappendixnote} package is available on \fnurl{https://ctan.org/pkg
 % Print all appendix notes
 %    \begin{macrocode}
 \NewDocumentCommand{\printappxnotes}{}{
-  \int_step_function:nN {\seq_count:N \g_ban_titles} \print_func:n
+  \int_step_function:nN {\seq_count:N \g_ban_titles} \expand_func:n
 }
 %    \end{macrocode}
 % \end{macro}
