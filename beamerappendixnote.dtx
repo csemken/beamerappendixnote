@@ -23,7 +23,7 @@
 %</driver>
 %<package> \ProvidesPackage{beamerappendixnote}
 %<*package>
-  [2020/06/26 v1.1.0 environment and frame options]
+  [2020/06/26 v1.1.1 environment and frame options]
 %</package>
 %<*driver>
 \documentclass{l3doc}
@@ -70,7 +70,7 @@
 
 \begin{documentation}
 
-\noindent Beamer appendix note introduces the \cs{appxnote} command and environment, which puts the note's content on a separate beamer frame, shown by the command \cs{printappxnotes}.  It also creates interactive buttons to move back and forth between the two frames.
+\noindent Beamer appendix note introduces the \cs{appxnote} command, which puts the note's content on a separate beamer frame, shown by the command \cs{printappxnotes}.  It also creates interactive buttons to move back and forth between the two frames.
 
 \lstinputlisting{example-basic.tex}
 \includegraphics[page=1,width=.49\linewidth]{example-basic.pdf}
@@ -85,15 +85,10 @@ The \pkg{beamerappendixnote} package is available on \fnurl{https://ctan.org/pkg
 
 \begin{function}{\appxnote}
   \begin{syntax}
-   \cs{appxnote}\marg{title}\oarg{frameoptions}\marg{content}
+   \cs{appxnote}\oarg{frameoptions}\marg{title}\marg{content}
   \end{syntax}
   
   Create a new appendix note.  Inserts a \cs{beamergotobutton} to a frame that contains \meta{content}.  The appendix frame is created using \cs{printappxnotes}.  The button’s text and the title of the appendix frame are both set to \meta{title}.  If you specify \meta{frameoptions}, these will be used when creating the beamer frame.
-  
-  For multi-line content use the corresponding environment: 
-  \lstinputlisting{example-paragraphs.tex}
-  \includegraphics[page=1,width=.49\linewidth]{example-paragraphs.pdf}
-  \includegraphics[page=2,width=.49\linewidth]{example-paragraphs.pdf}
 \end{function}
 
 \begin{function}{\printappxnotes}
@@ -164,14 +159,16 @@ The \pkg{beamerappendixnote} package is available on \fnurl{https://ctan.org/pkg
 % \subsection{Macros}
 % \begin{macro}{\appxnote}
 % Create a new appendix note (store values) and insert a button
+% Note: using \cs{newcommand} because \cs{NewDocumentCommand} does not support 
+% multiple paragraphs 
 %    \begin{macrocode}
-\NewDocumentEnvironment{appxnote}{m O{t} +b}{
-  \seq_gput_right:Nn \g_ban_titles {#1}
-  \seq_gput_right:Nn \g_ban_options {#2}
+\newcommand{\appxnote}[3][t]{
+  \seq_gput_right:Nn \g_ban_titles {#2}
+  \seq_gput_right:Nn \g_ban_options {#1}
   \seq_gput_right:Nn \g_ban_content {#3}
-  \hyperlink{ban-\seq_count:N \g_ban_titles}{\beamergotobutton{#1}}%
+  \hyperlink{ban-\seq_count:N \g_ban_titles}{\beamergotobutton{#2}}%
   \label{ban-back-\seq_count:N \g_ban_titles}
-}{}
+}
 %    \end{macrocode}
 % \end{macro}
 % 
