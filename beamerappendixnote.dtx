@@ -23,7 +23,7 @@
 %</driver>
 %<package> \ProvidesPackage{beamerappendixnote}
 %<*package>
-  [2020/06/26 v1.1.1 environment and frame options]
+  [2020/07/01 v1.2.0 backposition option]
 %</package>
 %<*driver>
 \documentclass{l3doc}
@@ -34,7 +34,7 @@
 % Unicode
 \usepackage{fontspec,unicode-math}
 % Auxiliary
-\usepackage{listings,graphicx}
+\usepackage{listings,graphicx,xparse}
 
 %% Layout
 % Font
@@ -50,6 +50,19 @@
 
 %% Definitions
 \newcommand\fnurl[2]{\href{#1}{#2}\footnote{\url{#1}}}
+\ExplSyntaxOn
+\NewDocumentCommand{\example}{m m o}
+  {
+    \IfNoValueTF{#3} 
+      {\lstinputlisting{example-#1.tex}}
+      {\lstinputlisting[linerange=#3]{example-#1.tex}}
+    \int_step_inline:nn {#2} 
+      {
+        \includegraphics[page=##1,width=.49\linewidth]{example-#1.pdf}
+        \int_if_even:nT {##1} {\newline}
+      }
+  }
+\ExplSyntaxOff
 
 \begin{document}
 
@@ -72,9 +85,7 @@
 
 \noindent Beamer appendix note introduces the \cs{appxnote} command, which puts the note's content on a separate beamer frame, shown by the command \cs{printappxnotes}.  It also creates interactive buttons to move back and forth between the two frames.
 
-\lstinputlisting{example-basic.tex}
-\includegraphics[page=1,width=.49\linewidth]{example-basic.pdf}
-\includegraphics[page=2,width=.49\linewidth]{example-basic.pdf}
+\example{basic}{2}
 
 \clearpage
 \section{Installation}
@@ -99,13 +110,30 @@ The \pkg{beamerappendixnote} package is available on \fnurl{https://ctan.org/pkg
   Prints appendix notes in the order they are created using \cs{appxnote}.  Has to be used after the last appendix note.  Uses one frame per note.  Inserts a \cs{beamerreturnbutton} button to the frame where \cs{appxnote} was called, followed by the content, separated by a \cs{vfill}.  
 \end{function}
 
+
+\section{Advanced usage}
+
+\subsection{Change the back button placement}
+
+To move the back button from the body of the appendix notes into the frame title, load the \pkg{beamerappendixnote} package with the \lstinline{backposition=title} option.
+
+\example{backtop}{2}[2-2]
+
+\subsection{Multi-frame notes}
+
+To create appendix notes spanning multiple frames, set \meta{frameoption} to \lstinline{allowframebreaks}.  This works well with the \lstinline{backposition=title} package option, as it makes the back button visible on every frame.
+
+\example{longnote}{4}
+
+
+
 \end{documentation}
 
 
-\begin{implementation}
-  \section{Implementation}
-  \DocInput{beamerappendixnote.dtx}
-\end{implementation}
+%\begin{implementation}
+%  \section{Implementation}
+%  \DocInput{beamerappendixnote.dtx}
+%\end{implementation}
 
 
 \end{document}
@@ -118,12 +146,10 @@ The \pkg{beamerappendixnote} package is available on \fnurl{https://ctan.org/pkg
 %
 % \subsection{Dependencies}
 %
-% Load the essential support (\pkg{expl3}).
 %    \begin{macrocode}
 \RequirePackage{expl3}
 %    \end{macrocode}
 %
-% Make sure that the version of \pkg{l3kernel} in use is sufficiently new.
 %    \begin{macrocode}
 \@ifpackagelater {expl3}{2018/04/22} {} {%
   \PackageError {beamerappendixnote} {Support package expl3 too old}
@@ -138,13 +164,28 @@ The \pkg{beamerappendixnote} package is available on \fnurl{https://ctan.org/pkg
 %
 % Identify the package and give the over all version information
 %    \begin{macrocode}
-\ProvidesExplPackage {beamerappendixnote} {2020/05/07} {1.0}
+\ProvidesExplPackage {beamerappendixnote} {2020/07/01} {1.2.0}
   {Create notes in appendix frames}
 %    \end{macrocode}
 %
-% User level interfaces are all created by \pkg{xparse}
+% User level interfaces are all created by \pkg{xparse}.
 %    \begin{macrocode}
-\RequirePackage {xparse}
+\RequirePackage{xparse}
+\RequirePackage{l3keys2e}
+%    \end{macrocode}
+% 
+% \subsection{Package options}
+%    \begin{macrocode}
+\keys_define:nn { beamerappendixnote }
+{
+  backposition .choices:nn = { top, bottom, title } { },
+  backposition .tl_set:N = \g_ban_backposition
+}
+\keys_set:nn { beamerappendixnote } 
+{
+  backposition = top
+}
+\ProcessKeysOptions { beamerappendixnote } 
 %    \end{macrocode}
 %
 % \subsection{Data structures}
@@ -154,6 +195,7 @@ The \pkg{beamerappendixnote} package is available on \fnurl{https://ctan.org/pkg
 \seq_new:N \g_ban_titles
 \seq_new:N \g_ban_content
 \seq_new:N \g_ban_options
+\cs_generate_variant:Nn \tl_if_eq:nnT { V }
 %    \end{macrocode}
 %
 % \subsection{Macros}
@@ -178,9 +220,22 @@ The \pkg{beamerappendixnote} package is available on \fnurl{https://ctan.org/pkg
 %    \begin{macrocode}
 \cs_set:Npn \print_func:nnnnn #1 #2 #3 #4 #5 { 
   \def\options{#5}
-  \begin{frame}[\expandafter\options]{#1}\label{#3}
-    \hyperlink{#4}{\beamerreturnbutton{Back}}
-    \vfill
+  \begin{frame}[\expandafter\options]
+    {
+      \tl_if_eq:VnT \g_ban_backposition { title } 
+        {
+          \hyperlink{#4}{\beamerreturnbutton{Back}}~
+        }
+      #1 
+    }
+    \label{#3}
+    
+    \tl_if_eq:VnT \g_ban_backposition { top } 
+      {
+        \hyperlink{#4}{\beamerreturnbutton{Back}}
+        \vfill
+      }
+    
     #2
   \end{frame}
 }
