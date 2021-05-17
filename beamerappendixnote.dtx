@@ -64,6 +64,15 @@
   }
 \ExplSyntaxOff
 
+% TODO save to variable and use in include etc
+\makeatletter
+\@ifpackageloaded{tex4ht}{%
+  \typeout{html}%
+}{%
+  \typeout{not html}%
+}
+\makeatother    
+
 \begin{document}
 
 \GetFileInfo{beamerappendixnote.dtx}
