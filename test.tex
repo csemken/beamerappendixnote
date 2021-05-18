@@ -1,0 +1,42 @@
+\documentclass{l3doc}
+
+\usepackage{graphicx}
+
+%% Definitions
+\newcommand\fnurl[2]{\href{#1}{#2}\footnote{\url{#1}}}
+\ExplSyntaxOn
+\NewDocumentCommand{\example}{m m o}
+  {
+    \int_step_inline:nn {#2} 
+      {
+        \includegraphics[page=##1,width=.49\linewidth]{example-#1.pdf}
+        \int_if_even:nT {##1} {\newline}
+      }
+  }
+\ExplSyntaxOff
+
+% TODO save to variable and use in include etc
+\makeatletter
+\@ifpackageloaded{tex4ht}{%
+  \typeout{html}%
+}{%
+  \typeout{not html}%
+}
+\makeatother    
+
+\begin{document}
+
+\example{basic}{2}
+
+
+\section{Usage}
+
+\begin{function}{\appxnote}
+  \begin{syntax}
+   \cs{appxnote}\oarg{frameoptions}\marg{title}\marg{content}
+  \end{syntax}
+  
+  Create a new appendix note.  Inserts a \cs{beamergotobutton} to a frame that contains \meta{content}.  The appendix frame is created using \cs{printappxnotes}.  The button’s text and the title of the appendix frame are both set to \meta{title}.  If you specify \meta{frameoptions}, these will be used when creating the beamer frame.
+\end{function}
+
+\end{document}
