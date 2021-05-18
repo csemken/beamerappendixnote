@@ -32,7 +32,7 @@
 % This package
 \usepackage{beamerappendixnote}
 % Unicode
-% \usepackage{fontspec,unicode-math}
+%\usepackage{fontspec}
 % Auxiliary
 \usepackage{listings,graphicx,xparse}
 
@@ -58,8 +58,8 @@
       {\lstinputlisting[linerange=#3]{example-#1.tex}}
     \int_step_inline:nn {#2} 
       {
-        %\includegraphics[page=##1,width=.49\linewidth]{example-#1.pdf}
-        %\int_if_even:nT {##1} {\newline}
+        \includegraphics[page=##1,width=.49\linewidth]{example-#1.pdf}
+        \int_if_even:nT {##1} {\newline}
       }
   }
 \ExplSyntaxOff
@@ -103,21 +103,21 @@ The \pkg{beamerappendixnote} package is available on \fnurl{https://ctan.org/pkg
 
 \section{Usage}
 
-%\begin{function}{\appxnote}
+\begin{function}{\appxnote}
   \begin{syntax}
    \cs{appxnote}\oarg{frameoptions}\marg{title}\marg{content}
   \end{syntax}
   
   Create a new appendix note.  Inserts a \cs{beamergotobutton} to a frame that contains \meta{content}.  The appendix frame is created using \cs{printappxnotes}.  The button’s text and the title of the appendix frame are both set to \meta{title}.  If you specify \meta{frameoptions}, these will be used when creating the beamer frame.
-%\end{function}
+\end{function}
 
-%\begin{function}{\printappxnotes}
+\begin{function}{\printappxnotes}
   \begin{syntax}
    \cs{printappxnotes}
   \end{syntax}
   
   Prints appendix notes in the order they are created using \cs{appxnote}.  Has to be used after the last appendix note.  Uses one frame per note.  Inserts a \cs{beamerreturnbutton} button to the frame where \cs{appxnote} was called, followed by the content, separated by a \cs{vfill}.  
-%\end{function}
+\end{function}
 
 
 \section{Advanced usage}
