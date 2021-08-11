@@ -11,5 +11,5 @@ cp *.dtx *.tex $BUILD_DIR
 # build
 mkdir $HTML_OUTPUT_DIR
 cd $BUILD_DIR
-make4ht --config ../tex4ht.cfg --output-dir ../$HTML_OUTPUT_DIR $NAME.dtx
+make4ht --config ../tex4ht.cfg --format "html5+staticsite" --output-dir ../$HTML_OUTPUT_DIR $NAME.dtx
 
